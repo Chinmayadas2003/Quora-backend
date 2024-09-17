@@ -77,6 +77,21 @@ class UserRepository {
             throw error;
         }
     }
+    //deleting based on user defined id
+    // async deleteUser(id) {
+    //     try {
+    //         const deleteUser = await User.findOneAndDelete({id:id});
+    //         if (!deleteUser) {
+    //             logger.warn(`User with ID: ${id} not found for deletion`);
+    //             throw new NotFound('User', id);
+    //         }
+    //         logger.info(`User with ID: ${id} deleted`);
+    //         return deleteUser;
+    //     } catch (error) {
+    //         logger.error(`Error deleting user with ID: ${id}: `, error);
+    //         throw error;
+    //     }
+    // }
 }
 
 module.exports = UserRepository;
