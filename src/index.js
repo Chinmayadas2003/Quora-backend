@@ -21,6 +21,9 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRouter);
 app.use(errorHandler.errorHandler);
+
+//adding winston logging 
+
 // Start the server
 app.listen(PORT, async () => {
     console.log(`server started at  http://localhost:${PORT}/`);
