@@ -1,22 +1,11 @@
-class AnswerService {
-    constructor(AnswerRepository) {
-        this.AnswerRepository = AnswerRepository;
-    }
+const express = require("express");
+const { answerController } = require("../../controllers/index");
+const answerRouter = express.Router();
 
-    async getAllAnswers(questionId) {
-        const answers = await this.AnswerRepository.getAllAnswers(questionId);
-        return answers;
-    }
+answerRouter.get("/ping", answerController.pingAnswerController);
+answerRouter.get("/:id", answerController.getAllAnswers);
+answerRouter.put("/:id", answerController.updateAnswer);
+answerRouter.delete("/:id", answerController.deleteAnswer);
+answerRouter.post("/:id/comments", answerController.addComment);
 
-    async updateAnswer(answerId, updatedData) {
-        const answer = await this.AnswerRepository.updateAnswer(answerId, updatedData);
-        return answer;
-    }
-
-    async deleteAnswer(answerId) {
-        const answer = await this.AnswerRepository.deleteAnswer(answerId);
-        return answer;
-    }
-}
-
-module.exports = AnswerService;
+module.exports = answerRouter;

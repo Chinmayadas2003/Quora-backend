@@ -19,7 +19,7 @@ const commentSchema = new mongoose.Schema({
         required: [true, 'User ID of the comment cannot be empty']
     }
 }, {
-    timestamps: { createdAt: 'created_at' } // Adds created_at and updated_at timestamps
+    timestamps: true // Adds created_at and updated_at timestamps automatically
 });
 
 // Create the Comment model

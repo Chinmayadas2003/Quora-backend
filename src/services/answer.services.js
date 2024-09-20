@@ -17,6 +17,11 @@ class AnswerService {
         const answer = await this.AnswerRepository.deleteAnswer(answerId);
         return answer;
     }
+
+    async addComment(id,commentData){
+        const comment= await this.AnswerRepository.addComment(id,commentData);
+        return comment;
+    }
 }
 
 module.exports = AnswerService;
