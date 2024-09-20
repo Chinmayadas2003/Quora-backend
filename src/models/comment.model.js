@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 // Define the schema for comments
 const commentSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: [true, 'Id of the comment cannot be empty']
-    },
+    // id: {
+    //     type: String,
+    //     required: [true, 'Id of the comment cannot be empty']
+    // },
     parent_id: {
         type: String,
         required: [true, 'Parent ID of the comment cannot be empty']
