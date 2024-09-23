@@ -1,9 +1,10 @@
 
+
 ---
 
 # Quora Backend Service
 
-This is a simple backend service for a Quora-like platform built using Node.js, Express, and MongoDB. It provides functionality for managing **users**, **questions**, and **answers**, allowing you to create, update, retrieve, and delete these resources.
+This is a simple backend service for a Quora-like platform built using Node.js, Express, and MongoDB. It provides functionality for managing **users**, **questions**, **answers**, **comments**, and **likes**, allowing you to create, update, retrieve, and delete these resources.
 
 ## Table of Contents
 
@@ -19,8 +20,10 @@ This is a simple backend service for a Quora-like platform built using Node.js, 
 ## Features
 
 - **Users**: Create, retrieve, update, and delete user profiles.
-- **Questions**: Post questions, fetch all questions, update and delete questions.
+- **Questions**: Post questions, fetch all questions, update, and delete questions.
 - **Answers**: Submit answers to questions, fetch all answers, update, and delete answers.
+- **Comments**: Add comments to questions, answers, or other comments, retrieve all comments, update, and delete them.
+- **Likes**: Like or dislike questions, answers, or comments. Retrieve all likes for specific content.
 - **Search**: Search for questions or answers using partial matching with case insensitivity.
 
 ## Project Structure
@@ -32,19 +35,27 @@ quora-backend/
 │   ├── controllers/
 │   │   ├── user.controller.js
 │   │   ├── question.controller.js
-│   │   └── answer.controller.js
+│   │   ├── answer.controller.js
+│   │   ├── comment.controller.js
+│   │   └── like.controller.js
 │   ├── services/
 │   │   ├── user.service.js
 │   │   ├── question.service.js
-│   │   └── answer.service.js
+│   │   ├── answer.service.js
+│   │   ├── comment.service.js
+│   │   └── like.service.js
 │   ├── repositories/
 │   │   ├── user.repository.js
 │   │   ├── question.repository.js
-│   │   └── answer.repository.js
+│   │   ├── answer.repository.js
+│   │   ├── comment.repository.js
+│   │   └── like.repository.js
 │   ├── models/
 │   │   ├── user.model.js
 │   │   ├── question.model.js
-│   │   └── answer.model.js
+│   │   ├── answer.model.js
+│   │   ├── comment.model.js
+│   │   └── like.model.js
 │   ├── errors/
 │   │   ├── base.error.js
 │   │   └── notfound.error.js
@@ -117,6 +128,20 @@ quora-backend/
 - **Update Answer**: `PUT /answers/:id`
 - **Delete Answer**: `DELETE /answers/:id`
 
+### Comment Endpoints
+
+- **Add Comment to Comment**: `POST /comments/:id`
+- **Get All Comments for Comment**: `GET /comments/:id`
+- **Update Comment**: `PUT /comments/:id`
+- **Delete Comment**: `DELETE /comments/:id`
+- **Delete Nested Comment**: `DELETE /comments/:parent_id/:id`
+
+### Like Endpoints
+
+- **Like a Question/Answer/Comment**: `POST /likes/:type/:type_id/:id`
+- **Get All Likes for Question/Answer/Comment**: `GET /likes/:type/:type_id/:id/getlikes`
+- **Dislike (Remove Like)**: `DELETE /likes/:id/dislikes`
+
 ### Sample API Call (Create User)
 
 **Request**:
@@ -145,11 +170,58 @@ Content-Type: application/json
 }
 ```
 
+### Sample API Call (Add Comment to a Comment)
+
+**Request**:
+```bash
+POST /comments/:id
+Content-Type: application/json
+
+{
+  "text": "This is a reply to your comment",
+  "user_id": "60c72b1f4f1a4d0021a4d3e2"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Comment added to Comment Successfully",
+  "data": {
+    "text": "This is a reply to your comment",
+    "user_id": "60c72b1f4f1a4d0021a4d3e2",
+    "_id": "60c72b1f4f1a4d0021a4d3e4"
+  }
+}
+```
+
+### Sample API Call (Like a Question)
+
+**Request**:
+```bash
+POST /likes/questions/605c72b1f4f1a4d0021a4d3e/604c72a3b1f5a4d001a2d1b5
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Liked the 605c72b1f4f1a4d0021a4d3e",
+  "data": {
+    "_id": "605c72b1f4f1a4d0021a4d3e",
+    "user_id": "604c72a3b1f5a4d001a2d1b5",
+    "type": "questions",
+    "type_id": "605c72b1f4f1a4d0021a4d3e"
+  }
+}
+```
+
 ## Error Handling
 
 The service includes centralized error handling using custom error classes:
 
-- **NotFoundError**: Thrown when a requested resource (user, question, or answer) is not found.
+- **NotFoundError**: Thrown when a requested resource (user, question, answer, comment, or like) is not found.
 - **BaseError**: A general error class from which other custom errors extend.
 
 For example, if a user is not found, the response will look like:
