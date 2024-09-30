@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 
-// Define the schema for comments
-const commentSchema = new mongoose.Schema({
-    // id: {
-    //     type: String,
-    //     required: [true, 'Id of the comment cannot be empty']
-    // },
+const commentSchema = new Schema({
     parent_id: {
         type: String,
-        required: [true, 'Parent ID of the comment cannot be empty']
+        required: [false, 'Parent ID of the comment cannot be empty']
     },
     text: {
         type: String,
@@ -19,10 +15,8 @@ const commentSchema = new mongoose.Schema({
         required: [true, 'User ID of the comment cannot be empty']
     }
 }, {
-    timestamps: true // Adds created_at and updated_at timestamps automatically
+    timestamps: true  // Automatically adds 'createdAt' and 'updatedAt'
 });
 
-// Create the Comment model
-const Comment = mongoose.model('comments', commentSchema);
-
+const Comment = model('Comment', commentSchema);
 module.exports = Comment;

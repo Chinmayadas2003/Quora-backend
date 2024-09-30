@@ -59,6 +59,7 @@ async function deleteAnswer(req, res, next) {
 async function addComment(req, res, next) {
     try {
         const comment = await answerService.addComment(req.params.id, req.body);
+        console.log(req.body);
         return res.status(StatusCodes.CREATED).json({
             success: true,
             message: 'Comment Created Successfully',

@@ -21,10 +21,12 @@ async function createQuestion(req, res, next) {
         next(error);
     }
 }
-
+//changed the function a bit
 async function searchQuestion(req, res, next) {
     try {
-        const question = await questionService.searchQuestion(req.body);
+        const question = await questionService.searchQuestion(req.query);
+        console.log(req.body);
+        console.log(req.query);
         return res.status(StatusCodes.OK).json({
             success: "true",
             message: "Question Fetched",

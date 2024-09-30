@@ -1,6 +1,8 @@
 const { Answer } = require('../models/index');
+const { Comment } = require('../models/index');
 const NotFound = require('../errors/notfound.error');
 const logger = require("../config/loger.config"); // CommonJS require
+const mongoose = require('mongoose'); 
 
 class AnswerRepository {
     async getAllAnswers(id) {
@@ -53,6 +55,7 @@ class AnswerRepository {
                 logger.warn(`Answer with ID: ${id} not found for adding comment`);
                 throw new NotFound('Answer', id);
             }
+            console.log(answer);
             const comment = await Comment.create({
                 parent_id: id,
                 text: commentData.text,
@@ -66,6 +69,7 @@ class AnswerRepository {
             throw error;
         }
     }
+    
 };
 
 module.exports = AnswerRepository;

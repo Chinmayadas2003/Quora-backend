@@ -7,6 +7,7 @@ class QuestionRepository {
     async createQuestion(questionData) {
         try {
             const question = await Question.create({
+                id:questionData.id,
                 title: questionData.title,
                 body: questionData.body,
                 topics: questionData.topics,
@@ -22,6 +23,7 @@ class QuestionRepository {
     
     async searchQuestion(searchData) {
         try {
+
             const query = {};  // Initialize an empty query object
     
             // Build a dynamic query using regex for case-insensitive matching
@@ -32,7 +34,9 @@ class QuestionRepository {
             }
     
             // Perform the search in the database
+            console.log(searchData,"hello");
             const questions = await Question.find(query);
+            
     
             // Check if no results are found
             if (!questions.length) {
@@ -104,6 +108,7 @@ class QuestionRepository {
             console.log(question);
             console.log(answerData);
             const answer = await Answer.create({
+                id:answerData.id,
                 question_id: id,
                 text: answerData.text,
                 user_id: answerData.user_id,

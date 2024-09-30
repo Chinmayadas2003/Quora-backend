@@ -10,6 +10,7 @@ class QuestionService {
 
     async searchQuestion(searchData) {
         const question = await this.QuestionRepository.searchQuestion(searchData);
+        // console.log(searchData)
         return question;
     }
 
