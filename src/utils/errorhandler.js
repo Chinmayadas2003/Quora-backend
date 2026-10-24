@@ -1,5 +1,6 @@
 const BaseError = require('../errors/base.error');
 const { StatusCodes } = require('http-status-codes');
+const logger = require('../config/loger.config');
 
 function errorHandler(err, req, res, next) {
   // Check if the error is an instance of BaseError (custom error)
@@ -12,11 +13,12 @@ function errorHandler(err, req, res, next) {
     });
   }
 
-  // Handle other errors (non-custom, unexpected errors)
+  logger.error(`Unhandled request error for ${req.method} ${req.originalUrl}: ${err.stack || err.message}`);
+
   return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
     success: false,
     message: "Something went wrong",
-    details: err,
+    details: {},
     data: {},
   });
 }

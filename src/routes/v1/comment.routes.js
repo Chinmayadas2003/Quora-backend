@@ -7,6 +7,6 @@ commentRouter.post("/:id", commentController.addCommentToComment);
 commentRouter.get("/:id", commentController.getAllCommentsToComments);
 commentRouter.put("/:id", commentController.updateComment);
 commentRouter.delete("/:id", commentController.deleteComment);
-commentRouter.delete("/:parentId/:id", commentController.deleteCommentOfComment);
+commentRouter.delete("/:parent_id/:id", commentController.deleteCommentOfComment);
 
 module.exports = commentRouter;
