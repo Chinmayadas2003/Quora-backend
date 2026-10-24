@@ -1,6 +1,7 @@
 const { Question } = require('../models/index');
 const { Answer } = require('../models/index');
 const NotFound = require('../errors/notfound.error');
+const BadRequest = require('../errors/badrequest');
 const logger = require("../config/loger.config"); // Use require for CommonJS modules
 
 class QuestionRepository {
@@ -23,33 +24,32 @@ class QuestionRepository {
     
     async searchQuestion(searchData) {
         try {
+            const allowedFields = ['title', 'body', 'topics'];
+            const filters = allowedFields
+                .filter((field) => typeof searchData[field] === 'string' && searchData[field].trim())
+                .map((field) => {
+                    const value = searchData[field].trim();
+                    if (value.length > 100) {
+                        throw new BadRequest(field, 'Search values must be 100 characters or fewer');
+                    }
 
-            const query = {};  // Initialize an empty query object
-    
-            // Build a dynamic query using regex for case-insensitive matching
-            for (const [key, value] of Object.entries(searchData)) {
-                if (value) { // Ensure that the value is not undefined or null
-                    query[key] = { $regex: value, $options: 'i' };
-                }
+                    const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    return { [field]: { $regex: escapedValue, $options: 'i' } };
+                });
+
+            if (filters.length === 0) {
+                throw new BadRequest('search', 'Provide a title, body, or topics search value');
             }
-    
-            // Perform the search in the database
-            console.log(searchData,"hello");
-            const questions = await Question.find(query);
-            
-    
-            // Check if no results are found
+
+            const questions = await Question.find({ $or: filters }).limit(50);
             if (!questions.length) {
-                logger.warn(`Questions matching search data: ${JSON.stringify(searchData)} not found`);
-                throw new NotFound('Question', searchData);
+                throw new NotFound('Question', 'search criteria');
             }
-    
-            // Log and return the found questions
-            logger.info(`Questions matching search data: ${JSON.stringify(searchData)} retrieved`);
+
+            logger.info(`Retrieved ${questions.length} questions matching search criteria`);
             return questions;
-    
         } catch (error) {
-            logger.error(`Error retrieving questions with search data: ${JSON.stringify(searchData)}: `, error);
+            logger.error('Error retrieving questions for search criteria', error);
             throw error;
         }
     }

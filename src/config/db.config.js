@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
-const { ATLAS_DB_URL, NODE_ENV } = require("./server.config");
+const { MONGO_URI } = require("./server.config");
 
 async function connectToDB() {
-    try {
-        if (NODE_ENV == "development") {
-            await mongoose.connect(ATLAS_DB_URL);
-        }
-    } catch (error) {
-        console.log("Unable to connect to the DB server");
-        console.log(error);
+    if (!MONGO_URI) {
+        throw new Error('Missing required environment variable: MONGO_URI');
     }
+
+    await mongoose.connect(MONGO_URI);
+    return mongoose.connection;
 }
 
 module.exports = connectToDB;
